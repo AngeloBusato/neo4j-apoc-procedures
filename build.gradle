@@ -86,6 +86,7 @@ dependencies {
     compile group: 'com.github.javafaker', name: 'javafaker', version:'0.10'
 
     compile group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+    compile group: 'org.apache.opennlp', name: 'opennlp-tools', version: '1.5.3'
 }
 
 test {
