@@ -39,6 +39,7 @@ public class WordAnalyzer {
 
     public WordAnalyzer(String language, String finderModel) throws Exception {
         InputStream tokenModelFileInputStream = ClassLoader.getSystemResourceAsStream(String.format(TOKEN_MODEL_PATTERN, language));
+        System.out.println("TOKEN_MODEL_PATTERN = " + TOKEN_MODEL_PATTERN);
         System.out.println("tokenModelFileInputStream = " + tokenModelFileInputStream);
         tokenizerModel = new TokenizerModel(tokenModelFileInputStream);
         tokenModelFileInputStream.close();
@@ -48,7 +49,6 @@ public class WordAnalyzer {
         InputStream tokenFinderFileInputStream = ClassLoader.getSystemResourceAsStream(String.format(FINDER_MODEL_PATTERN, language, finderModel));
         tokenNameFinderModel = new TokenNameFinderModel(tokenFinderFileInputStream);
         tokenFinderFileInputStream.close();
-
         nameFinder = new NameFinderME(tokenNameFinderModel);
 
         InputStream sentenceModelFileInputStream = ClassLoader.getSystemResourceAsStream(String.format(SENTENCE_MODEL_PATTERN, language));

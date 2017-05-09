@@ -19,7 +19,6 @@ public class WordAnalyzerProcedure {
         System.out.println("language = " + language);
         WordAnalyzer wordAnalyzer = new WordAnalyzer(language, "");
         String[] sentences = wordAnalyzer.getSentences(text);
-
         return Arrays.asList(sentences).stream().map(s -> new WordResult(s));
     }
 
