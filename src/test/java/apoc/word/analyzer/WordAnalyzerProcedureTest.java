@@ -35,7 +35,7 @@ public class WordAnalyzerProcedureTest {
 
     private static Map<String, Object> params;
 
-    private static final String TEXT = "";
+    private static final String TEXT = "The reopening of the case has sent the Clinton campaign into complete chaos according to reports . Recommended Donald Trump has overtaken his political rival Hillary Clinton in a major new poll out this weekend as mainstream media outlets have refused to publish the results to the public. (53 mins ago) ";
 
     @BeforeClass
     public static void setUp() throws Exception {
@@ -56,7 +56,7 @@ public class WordAnalyzerProcedureTest {
     public void testGetSentences() {
         String call = "CALL apoc.word.analyzer.sentences({text}) yield result";
         TestUtil.testCall(db, call, params, r -> {
-            System.out.println(r);
+            System.out.println("sentences " + r.get("result"));
         });
     }
 
@@ -64,7 +64,16 @@ public class WordAnalyzerProcedureTest {
     public void testGetTokens() {
         String call = "CALL apoc.word.analyzer.tokens({text}) yield result";
         TestUtil.testCall(db, call, params, r -> {
-            System.out.println(r);
+            System.out.println("tokens " + r.get("result"));
+        });
+    }
+
+    @Test
+    public void testNames() {
+        params.put("type", "person");
+        String call = "CALL apoc.word.analyzer.names({text}, {type}) yield result";
+        TestUtil.testCall(db, call, params, r -> {
+            System.out.println("name: " + r.get("result"));
         });
     }
 }

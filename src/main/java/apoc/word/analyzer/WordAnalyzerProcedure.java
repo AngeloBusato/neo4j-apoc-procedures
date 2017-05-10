@@ -15,11 +15,10 @@ public class WordAnalyzerProcedure {
     @Procedure
     @Description("CALL apoc.word.analyzer.sentences(text, language) yield sentences - returns all sentences for a given input text")
     public Stream<WordResult> sentences(@Name(value = "text") String text, @Name(value = "language", defaultValue = "en") String language) throws Exception {
-        System.out.println("text = " + text);
-        System.out.println("language = " + language);
         WordAnalyzer wordAnalyzer = new WordAnalyzer(language, "");
         String[] sentences = wordAnalyzer.getSentences(text);
-        return Arrays.asList(sentences).stream().map(s -> new WordResult(s));
+
+        return Stream.of(new WordResult(Arrays.asList(sentences)));
     }
 
     @Procedure
@@ -28,6 +27,15 @@ public class WordAnalyzerProcedure {
         WordAnalyzer wordAnalyzer = new WordAnalyzer(language, "");
         String[] tokens = wordAnalyzer.getTokens(text);
 
-        return Arrays.asList(tokens).stream().map(s -> new WordResult(s));
+        return Stream.of(new WordResult(Arrays.asList(tokens)));
+    }
+
+    @Procedure
+    @Description("CALL apoc.word.analyzer.names(text, type, language) yield names - returns all names for a given input text")
+    public Stream<WordResult> names(@Name(value = "text") String text, @Name(value = "type") String type, @Name(value = "language", defaultValue = "en") String language) throws Exception {
+        WordAnalyzer wordAnalyzer = new WordAnalyzer(language, type);
+        String[] names = wordAnalyzer.getNames(wordAnalyzer.getTokens(text));
+
+        return Stream.of(new WordResult(Arrays.asList(names)));
     }
 }
