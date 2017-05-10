@@ -9,6 +9,7 @@ import opennlp.tools.tokenize.TokenizerME;
 import opennlp.tools.tokenize.TokenizerModel;
 import opennlp.tools.util.Span;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -21,11 +22,11 @@ import java.util.stream.Stream;
  */
 public class WordAnalyzer {
 
-    private static final String TOKEN_MODEL_PATTERN = "model/%s-token.bin";
+    private static final String TOKEN_MODEL_PATTERN = "nlp/wordanalyzer/model/%s-token.bin";
 
-    private static final String SENTENCE_MODEL_PATTERN = "model/%s-sent.bin";
+    private static final String SENTENCE_MODEL_PATTERN = "nlp/wordanalyzer/model/%s-sent.bin";
 
-    private static final String FINDER_MODEL_PATTERN = "model/%s-ner-%s.bin";
+    private static final String FINDER_MODEL_PATTERN = "nlp/wordanalyzer/model/%s-ner-%s.bin";
 
     private TokenizerModel tokenizerModel;
 
@@ -39,19 +40,20 @@ public class WordAnalyzer {
 
     public WordAnalyzer(String language, String finderModel) throws Exception {
         InputStream tokenModelFileInputStream = ClassLoader.getSystemResourceAsStream(String.format(TOKEN_MODEL_PATTERN, language));
-        System.out.println("TOKEN_MODEL_PATTERN = " + TOKEN_MODEL_PATTERN);
         System.out.println("tokenModelFileInputStream = " + tokenModelFileInputStream);
         tokenizerModel = new TokenizerModel(tokenModelFileInputStream);
         tokenModelFileInputStream.close();
-
         tokenizer = new TokenizerME(tokenizerModel);
 
-        InputStream tokenFinderFileInputStream = ClassLoader.getSystemResourceAsStream(String.format(FINDER_MODEL_PATTERN, language, finderModel));
-        tokenNameFinderModel = new TokenNameFinderModel(tokenFinderFileInputStream);
-        tokenFinderFileInputStream.close();
-        nameFinder = new NameFinderME(tokenNameFinderModel);
+        if (!StringUtils.isEmpty(finderModel)) {
+            InputStream tokenFinderFileInputStream = ClassLoader.getSystemResourceAsStream(String.format(FINDER_MODEL_PATTERN, language, finderModel));
+            tokenNameFinderModel = new TokenNameFinderModel(tokenFinderFileInputStream);
+            tokenFinderFileInputStream.close();
+            nameFinder = new NameFinderME(tokenNameFinderModel);
+        }
 
         InputStream sentenceModelFileInputStream = ClassLoader.getSystemResourceAsStream(String.format(SENTENCE_MODEL_PATTERN, language));
+        System.out.println("sentenceModelFileInputStream = " + sentenceModelFileInputStream);
         SentenceModel sentenceModel = new SentenceModel(sentenceModelFileInputStream);
         sentenceModelFileInputStream.close();
 
