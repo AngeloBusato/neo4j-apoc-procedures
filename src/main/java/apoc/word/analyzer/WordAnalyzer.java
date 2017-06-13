@@ -30,32 +30,37 @@ public class WordAnalyzer {
 
     private TokenizerModel tokenizerModel;
 
-    private Tokenizer tokenizer;
+    private static Tokenizer tokenizer;
 
     private TokenNameFinderModel tokenNameFinderModel;
 
-    private SentenceDetectorME sentenceFinder;
+    private static SentenceDetectorME sentenceFinder;
 
-    private NameFinderME nameFinder;
+    private static NameFinderME nameFinder;
 
     public WordAnalyzer(String language, String finderModel) throws Exception {
-        InputStream tokenModelFileInputStream = ClassLoader.getSystemResourceAsStream(String.format(TOKEN_MODEL_PATTERN, language));
-        tokenizerModel = new TokenizerModel(tokenModelFileInputStream);
-        tokenModelFileInputStream.close();
-        tokenizer = new TokenizerME(tokenizerModel);
 
-        if (!StringUtils.isEmpty(finderModel)) {
+        if (tokenizer == null) {
+            InputStream tokenModelFileInputStream = ClassLoader.getSystemResourceAsStream(String.format(TOKEN_MODEL_PATTERN, language));
+            tokenizerModel = new TokenizerModel(tokenModelFileInputStream);
+            tokenModelFileInputStream.close();
+            tokenizer = new TokenizerME(tokenizerModel);
+        }
+
+        if (!StringUtils.isEmpty(finderModel) && nameFinder == null) {
             InputStream tokenFinderFileInputStream = ClassLoader.getSystemResourceAsStream(String.format(FINDER_MODEL_PATTERN, language, finderModel));
             tokenNameFinderModel = new TokenNameFinderModel(tokenFinderFileInputStream);
             tokenFinderFileInputStream.close();
             nameFinder = new NameFinderME(tokenNameFinderModel);
         }
 
-        InputStream sentenceModelFileInputStream = ClassLoader.getSystemResourceAsStream(String.format(SENTENCE_MODEL_PATTERN, language));
-        SentenceModel sentenceModel = new SentenceModel(sentenceModelFileInputStream);
-        sentenceModelFileInputStream.close();
+        if (sentenceFinder == null) {
+            InputStream sentenceModelFileInputStream = ClassLoader.getSystemResourceAsStream(String.format(SENTENCE_MODEL_PATTERN, language));
+            SentenceModel sentenceModel = new SentenceModel(sentenceModelFileInputStream);
+            sentenceModelFileInputStream.close();
 
-        sentenceFinder = new SentenceDetectorME(sentenceModel);
+            sentenceFinder = new SentenceDetectorME(sentenceModel);
+        }
     }
 
     public String[] getSentences(String inputText) {
