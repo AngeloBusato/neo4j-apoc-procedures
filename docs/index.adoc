@@ -167,6 +167,11 @@ include::graph-refactor.adoc[leveloffset=1]
 
 include::trigger.adoc[leveloffset=2]
 
+== Atomic
+
+include::atomic.adoc[leveloffset=1]
+
 == Appendix: Complete Overview
 
 include::overview.adoc[tags=overview,leveloffset=1]
+
