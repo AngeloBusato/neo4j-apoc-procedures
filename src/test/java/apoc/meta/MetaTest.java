@@ -225,11 +225,16 @@ public class MetaTest {
                     assertEquals("node", movie.get("type"));
                     assertEquals(1L, movie.get("count"));
                     assertEquals(emprtyList, movie.get("labels"));
-                    assertEquals(emptyMap, movie.get("relationships"));
-                    assertEquals(3, movieTitleProperties.size());
+                    assertEquals(4, movieTitleProperties.size());
                     assertEquals("STRING", movieTitleProperties.get("type"));
                     assertEquals(true, movieTitleProperties.get("indexed"));
                     assertEquals(false, movieTitleProperties.get("unique"));
+                    Map<String, Object> movieRel = (Map<String, Object>) movie.get("relationships");
+                    Map<String, Object> movieActedIn = (Map<String, Object>)movieRel.get("ACTED_IN");
+                    assertEquals(1L, movieRel.size());
+                    assertEquals("in", movieActedIn.get("direction"));
+                    assertEquals(1L, movieActedIn.get("count"));
+                    assertEquals(Arrays.asList("Person", "Actor", "Director"), movieActedIn.get("labels"));
 
                     Map<String, Object>  person = (Map<String, Object>) o.get("Person");
                     Map<String, Object>  personProperties = (Map<String, Object>) person.get("properties");
